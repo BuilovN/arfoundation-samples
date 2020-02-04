@@ -31,9 +31,12 @@ public class PlaceOnPlane : MonoBehaviour
     /// </summary>
     public GameObject spawnedObject { get; private set; }
 
+    private ARSessionOrigin _sessionOrigin;
+
     void Awake()
     {
         m_RaycastManager = GetComponent<ARRaycastManager>();
+        _sessionOrigin = GetComponent<ARSessionOrigin>();
     }
 
     bool TryGetTouchPosition(out Vector2 touchPosition)
@@ -70,8 +73,13 @@ public class PlaceOnPlane : MonoBehaviour
 
             if (spawnedObject == null)
             {
-                GetComponent<ARPlaneManager>().planePrefab = null;
-                GetComponent<ARPointCloudManager>().pointCloudPrefab = null;
+                GetComponent<ARPlaneManager>().enabled = false;
+                GetComponent<ARPointCloudManager>().enabled = false;
+                foreach (Transform child in _sessionOrigin.trackablesParent)
+                {
+                    Destroy(child.gameObject);
+                }
+                
                 spawnedObject = Instantiate(m_PlacedPrefab, hitPose.position, hitPose.rotation);
             }
             else
