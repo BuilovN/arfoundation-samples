@@ -70,6 +70,8 @@ public class PlaceOnPlane : MonoBehaviour
 
             if (spawnedObject == null)
             {
+                GetComponent<ARPlaneManager>().planePrefab = null;
+                GetComponent<ARPointCloudManager>().pointCloudPrefab = null;
                 spawnedObject = Instantiate(m_PlacedPrefab, hitPose.position, hitPose.rotation);
             }
             else
